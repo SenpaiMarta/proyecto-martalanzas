@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "titulo": "Producto 1",
+    "descripcion": "Descripcion 1",
+    "estado": true,
+    "precio": 10,
+    "imagen": "imagen_1",
+    "codigo": "Codigo 1",
+    "stock": 10
+  },
+  {
+    "id": 2,
+    "titulo": "Rábanos",
+    "descripcion": "Tubérculo ácido",
+    "estado": true,
+    "precio": 0.77,
+    "imagen": "https://www.cubahora.cu/uploads/resources/images/2017/10/11/rabano-foto.jpg",
+    "codigo": "RAB001",
+    "stock": 25000
+  },
+  {
+    "id": 3,
+    "titulo": "Plátanos",
+    "descripcion": "La fruta prohibida",
+    "estado": true,
+    "precio": 0.93,
+    "imagen": "https://platanosruiz.com/wp-content/uploads/2023/02/platano-montaje-2048x1214.jpg",
+    "codigo": "PLAT001",
+    "stock": 17000
+  },
+  {
+    "id": 4,
+    "titulo": "Patatas",
+    "descripcion": "La reina de las tortillas",
+    "estado": true,
+    "precio": 0.22,
+    "imagen": "https://www.calfruitos.com/es/fotos/pr_223_20190304145434.png",
+    "codigo": "PAT001",
+    "stock": 60000
+  }
+]
