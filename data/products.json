@@ -1,15 +1,5 @@
 [
   {
-    "id": 1,
-    "titulo": "Producto 1",
-    "descripcion": "Descripcion 1",
-    "estado": true,
-    "precio": 10,
-    "imagen": "imagen_1",
-    "codigo": "Codigo 1",
-    "stock": 10
-  },
-  {
     "id": 2,
     "titulo": "Rábanos",
     "descripcion": "Tubérculo ácido",
@@ -38,5 +28,25 @@
     "imagen": "https://www.calfruitos.com/es/fotos/pr_223_20190304145434.png",
     "codigo": "PAT001",
     "stock": 60000
+  },
+  {
+    "id": 5,
+    "titulo": "Manzana",
+    "descripcion": "Dulce tentación de pecado",
+    "precio": 0.23,
+    "imagen": "https://i0.wp.com/www.buenmercadoacasa.com/blog/wp-content/uploads/2018/05/variedades-de-manzanas-buenmercadoacasa-portada.jpg?resize=1080%2C675&ssl=1",
+    "codigo": "MAN001",
+    "stock": 662682,
+    "categoria": "Fruta"
+  },
+  {
+    "id": 6,
+    "titulo": "Uvas",
+    "descripcion": "Pequeñas perlas de placer",
+    "precio": 0.58,
+    "imagen": "https://s2.ppllstatics.com/elcorreo/www/multimedia/2023/09/14/despensa1-kdfC-U210159430079JSB-1200x840@El%20Correo.jpg",
+    "codigo": "UVA001",
+    "stock": 31987410,
+    "categoria": "Fruta"
   }
 ]

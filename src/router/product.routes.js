@@ -1,43 +1,44 @@
 import { Router } from 'express'
 import fs from 'fs/promises'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import __dirname from "../dirname.js"
 
 const router = Router()
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const productsFilePath = path.join(__dirname, '../../data/products.json')
+//IMPORTANTE PARA TUTOR: he pasado toda esta parte a un manager como se indicó en la corrección anterior, pero no sé qué más debo hacer para que funcione correctamente. Igual en Cart. 
 
-class Product {
-    constructor(titulo, descripcion, precio, imagen, codigo, stock) {
-        this.id = 0
-        this.titulo = titulo
-        this.descripcion = descripcion
-        this.estado = true
-        this.precio = precio
-        this.imagen = imagen
-        this.codigo = codigo
-        this.stock = stock
-    }
-}
-//Accedemos al json creado de productos
-const readProductsFile = async () => {
-    try {
-        const data = await fs.readFile(productsFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        console.error('Error al leer el archivo de productos:', error)
-        return []
-    }
-};
-//Habilitamos la escritura en el json de productos
-const writeProductsFile = async (products) => {
-    try {
-        await fs.writeFile(productsFilePath, JSON.stringify(products, null, 2))
-    } catch (error) {
-        console.error('No hemos podido añadir este producto', error)
-    }
-};
+// const productsFilePath = path.join(__dirname, '../../data/products.json')
+
+// class Product {
+//     constructor(titulo, descripcion, precio, imagen, codigo, stock) {
+//         this.id = 0
+//         this.titulo = titulo
+//         this.descripcion = descripcion
+//         this.estado = true
+//         this.precio = precio
+//         this.imagen = imagen
+//         this.codigo = codigo
+//         this.stock = stock
+//     }
+// }
+// //Accedemos al json creado de productos
+// const readProductsFile = async () => {
+//     try {
+//         const data = await fs.readFile(productsFilePath, 'utf-8')
+//         return JSON.parse(data)
+//     } catch (error) {
+//         console.error('Error al leer el archivo de productos:', error)
+//         return []
+//     }
+// };
+// //Habilitamos la escritura en el json de productos
+// const writeProductsFile = async (products) => {
+//     try {
+//         await fs.writeFile(productsFilePath, JSON.stringify(products, null, 2))
+//     } catch (error) {
+//         console.error('No hemos podido añadir este producto', error)
+//     }
+// }
+
 //Método GET: leemos el json de productos
 router.get('/products', async (req, res) => {
     const products = await readProductsFile()
