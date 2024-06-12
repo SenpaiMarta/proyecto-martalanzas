@@ -37,11 +37,11 @@ h1 {
 
 .product-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 50px;
     justify-content: center;
     align-items: center;
-
+    max-width: 100%;
 }
 
 .product {

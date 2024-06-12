@@ -48,5 +48,25 @@
     "codigo": "UVA001",
     "stock": 31987410,
     "categoria": "Fruta"
+  },
+  {
+    "id": 7,
+    "titulo": "Panetonne",
+    "descripcion": "El mejor dulce de la vida",
+    "precio": 24.78,
+    "imagen": "https://s3.abcstatics.com/media/gurme/2022/12/27/s/panetone-ok-0045-ksiE--940x529@abc.jpg",
+    "codigo": "PAN001",
+    "stock": 25,
+    "categoria": "Dulces"
+  },
+  {
+    "id": 8,
+    "titulo": "Melocotón",
+    "descripcion": "Peludo y sabrosón",
+    "precio": 0.49,
+    "imagen": "http://vergelblanca.com/wp-content/uploads/2015/03/prod_melocoton.png",
+    "codigo": "MEL001",
+    "stock": 89600,
+    "categoria": "Fruta"
   }
 ]
