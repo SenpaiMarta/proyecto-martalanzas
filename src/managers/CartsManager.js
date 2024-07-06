@@ -1,47 +1,49 @@
-import { Router } from 'express'
-import fs from 'fs/promises'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import mongoose from 'mongoose'
 
-const router = Router()
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const cartFilePath = path.join(__dirname, '../../data/cart.json')
-const productsFilePath = path.join(__dirname, '../../data/products.json')
+const cartSchema = new mongoose.Schema({
+    products: [
+        {
+            productId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product'
+            },
+            cantidad: Number
+        }
+    ]
+})
 
-class Cart {
-    constructor() {
-        this.id = 0;
-        this.products = []
+const Cart = mongoose.model('Cart', cartSchema)
+
+class CartManager {
+    async createCart() {
+        const cart = new Cart({ products: [] })
+        return await cart.save()
+    }
+
+    async addProductToCart(cid, pid, cantidad) {
+        const cart = await Cart.findById(cid)
+        const productIndex = cart.products.findIndex(p => p.productId.toString() === pid)
+        if (productIndex >= 0) {
+            cart.products[productIndex].cantidad += cantidad
+        } else {
+            cart.products.push({ productId: pid, cantidad })
+        }
+        return await cart.save()
+    }
+
+    async getCartById(cid) {
+        return await Cart.findById(cid).populate('products.productId')
+    }
+
+    async removeProductFromCart(cid, pid) {
+        const cart = await Cart.findById(cid)
+        cart.products = cart.products.filter(p => p.productId.toString() !== pid)
+        await cart.save()
+    }
+
+    async deleteCart(cid) {
+        await Cart.findByIdAndDelete(cid)
     }
 }
-//Leemos en el json de cart si hay algún carrito
-const readCartFile = async () => {
-    try {
-        const data = await fs.readFile(cartFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        console.error('Error al leer el archivo del carrito:', error)
-        return []
-    }
-};
-//Habilitamos la escritura al crear al carrito en el cart.json
-const writeCartFile = async (cart) => {
-    try {
-        await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2))
-    } catch (error) {
-        console.error('¡Oh! No se ha podido crear el carrito', error)
-    }
-};
-//Leemos los productos que haya en el carrito en cart.json
-const readProductsFile = async () => {
-    try {
-        const data = await fs.readFile(productsFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        console.error('Vaya, no hemos podido encontrar los productos', error)
-        return [];
-    }
-};
 
-module.exports = CartsManager;
+export default CartManager

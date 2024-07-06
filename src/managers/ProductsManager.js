@@ -1,38 +1,34 @@
-import fs from 'fs/promises'
-import path from 'path'
-import __dirname from "./dirname.js"
+import mongoose from 'mongoose'
 
-const productsFilePath = path.join(__dirname, '../../data/products.json')
+const productSchema = new mongoose.Schema({
+    titulo: String,
+    descripcion: String,
+    estado: Boolean,
+    precio: Number,
+    imagen: String,
+    codigo: String,
+    stock: Number
+})
 
-class Product {
-    constructor(titulo, descripcion, precio, imagen, codigo, stock) {
-        this.id = 0
-        this.titulo = titulo
-        this.descripcion = descripcion
-        this.estado = true
-        this.precio = precio
-        this.imagen = imagen
-        this.codigo = codigo
-        this.stock = stock
+const Product = mongoose.model('Product', productSchema)
+
+class ProductManager {
+    async getAllProducts() {
+        return await Product.find()
     }
-}
-//Accedemos al json creado de productos
-const readProductsFile = async () => {
-    try {
-        const data = await fs.readFile(productsFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        console.error('Error al leer el archivo de productos:', error)
-        return []
+
+    async addProduct(product) {
+        const newProduct = new Product(product)
+        return await newProduct.save()
     }
-}
-//Habilitamos la escritura en el json de productos
-const writeProductsFile = async (products) => {
-    try {
-        await fs.writeFile(productsFilePath, JSON.stringify(products, null, 2))
-    } catch (error) {
-        console.error('No hemos podido añadir este producto', error)
+
+    async updateProduct(id, updatedProduct) {
+        return await Product.findByIdAndUpdate(id, updatedProduct, { new: true })
+    }
+
+    async deleteProduct(id) {
+        await Product.findByIdAndDelete(id)
     }
 }
 
-module.exports = ProductsManager
+export default ProductManager

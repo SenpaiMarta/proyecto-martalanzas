@@ -3,11 +3,12 @@
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "handlebars": "^4.7.8",
+    "mongoose": "^8.4.5",
     "socket.io": "^4.7.5"
   },
   "name": "proyecto-backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
