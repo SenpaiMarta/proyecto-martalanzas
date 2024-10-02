@@ -53,6 +53,6 @@ mongoose.connect(MONGO_URL)
             console.log(`Server running on port ${PORT}`)
         })
     })
-    .catch((err) => {
-        console.error('Database connection error:', err)
+    .catch((error) => {
+        console.error('Database connection error:', error)
     })
