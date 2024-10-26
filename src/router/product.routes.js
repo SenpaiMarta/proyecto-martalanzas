@@ -1,96 +1,108 @@
-import { Router } from 'express'
-import ProductManager from '../managers/ProductsManager.js'
-import Product from '../models/products.js'
-
-const router = Router()
+import express from "express"
+const router = express.Router()
+import ProductManager from "../dao/db/product-manager-db.js"
 const productManager = new ProductManager()
 
 router.get('/', async (req, res, next) => {
     try {
         const { limit = 10, page = 1, sort, query, category, available } = req.query
 
-        let filter = {}
+        const productos = await productManager.getProducts({
+            limit: parseInt(limit),
+            page: parseInt(page),
+            sort,
+            query 
+        })
 
-        if (query) {
-            filter.tipo = query
-        }
+        res.json({
+            estado: "exitoso",
+            payload: productos,
+            totalPages: productos.totalPages,
+            prevPage: productos.prevPage,
+            nextPage: productos.nextPage,
+            page: productos.page,
+            hasPrevPage: productos.hasPrevPage,
+            hasNextPage: productos.hasNextPage,
+            prevLink: productos.hasPrevPage ? `/api/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}` : null,
+            nextLink: productos.hasNextPage ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}` : null,
+        })
 
-        if (category) {
-            filter.categoria = category
-        }
-
-        if (available) {
-            filter.disponible = available === 'true'
-        }
-
-        const parsedLimit = parseInt(limit)
-        const parsedPage = parseInt(page)
-
-        const count = await Product.countDocuments(filter)
-
-        let sortOptions = {}
-        if (sort) {
-            if (sort === 'asc') {
-                sortOptions = { precio: 1 }
-            } else if (sort === 'desc') {
-                sortOptions = { precio: -1 }
-            }
-        }
-
-        const products = await Product.find(filter)
-            .sort(sortOptions)
-            .skip((parsedPage - 1) * parsedLimit)
-            .limit(parsedLimit)
-
-        const totalPages = Math.ceil(count / parsedLimit)
-        const hasPrevPage = parsedPage > 1
-        const hasNextPage = parsedPage < totalPages
-
-        const prevLink = hasPrevPage ? `/api/products?limit=${limit}&page=${parsedPage - 1}&sort=${sort}&query=${query}&category=${category}&available=${available}` : null
-        const nextLink = hasNextPage ? `/api/products?limit=${limit}&page=${parsedPage + 1}&sort=${sort}&query=${query}&category=${category}&available=${available}` : null
-
-        const response = {
-            status: 'success',
-            payload: products,
-            totalPages,
-            prevPage: hasPrevPage ? parsedPage - 1 : null,
-            nextPage: hasNextPage ? parsedPage + 1 : null,
-            page: parsedPage,
-            hasPrevPage,
-            hasNextPage,
-            prevLink,
-            nextLink
-        }
-
-        res.json(response)
-    } catch (err) {
-        next(err)
+    } catch (error) {
+        console.log("Error al obtener los productos", error)
+        res.status(500).json({
+            status: "error",
+            error: "Error interno del servidor"
+        })
     }
 })
 
-router.get('/:pid', async (req, res, next) => {
-    const { pid } = req.params
+router.get('/:pid', async (req, res) => {
+    const id = req.params.pid
+
     try {
-        const product = await Product.findById(pid)
-        if (!product) {
+        const producto = await productManager.findById(pid)
+        if (!producto) {
             return res.status(404).json({ error: 'El producto no existe' })
         }
-        res.json({ status: 'success', payload: product })
-    } catch (err) {
-        next(err)
+        res.json({ status: 'success', payload: producto })
+
+    } catch (error) {
+        console.error("Error al obtener producto", error);
+        res.status(500).json({
+            error: "Error interno del servidor"
+        })
     }
 })
 
 
-router.post('/:pid/add-to-cart', async (req, res, next) => {
-    const { pid } = req.params
+router.post("/", async (req, res) => {
+    const nuevoProducto = req.body
+
     try {
-        const cartId = req.body.cartId 
-        await productManager.addToCart(pid, cartId)
-        res.json({ status: 'success', message: 'Producto añadido al carrito' })
-    } catch (err) {
-        next(err)
+        await productManager.addProduct(nuevoProducto)
+        res.status(201).json({
+            message: "Producto agregado exitosamente"
+        })
+    } catch (error) {
+        console.error("Error al agregar producto", error)
+        res.status(500).json({
+            error: "Error interno del servidor"
+        })
     }
 })
 
-export default router
+
+router.put("/:pid", async (req, res) => {
+    const id = req.params.pid
+    const productActualizado = req.body
+
+    try {
+        await productManager.updateProduct(id, productActualizado)
+        res.json({
+            message: "Producto actualizado exitosamente"
+        });
+    } catch (error) {
+        console.error("Error al actualizar producto", error)
+        res.status(500).json({
+            error: "Error interno del servidor"
+        })
+    }
+})
+
+router.delete("/:pid", async (req, res) => {
+    const id = req.params.pid
+
+    try {
+        await ProductManager.deleteProduct(id);
+        res.json({
+            message: "Producto eliminado"
+        });
+    } catch (error) {
+        console.error("Error al eliminar producto", error)
+        res.status(500).json({
+            error: "Error interno del servidor"
+        })
+    }
+})
+
+export default productRouter

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/your-database-name', {
+        await mongoose.connect('mongodb+srv://soymartalanzas:7gJU7qWxfugem6fm@proyecto-backend.mnfpz.mongodb.net/?retryWrites=true&w=majority&appName=proyecto-backend', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -12,5 +12,4 @@ const connectDB = async () => {
         process.exit(1)
     }
 };
-
-module.exports = connectDB
+export default connectDB

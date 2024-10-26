@@ -1,40 +1,23 @@
 import passport from "passport"
-import local from "passport-local"
-
-import UserModel from "../models/users.js"
+import jwt from "passport-jwt"
+import UserModel from "../dao/models/users.model.js"
 import {createHash, isValidPassword} from "../utils/utils.js"
 
-const localStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
+const ExtractJwt = jwt.ExtractJwt
 
 const initializePassport = () => {
-    passport.use("register", new localStrategy({
-        passReqToCallback: true,
-        usernameField: "email"
+    passport.use("jwt", new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: "cuchufleto"
 
-    }, async(req, username, password, done) => {
-        const {first_name, last_name, email, age} = req.body
-        
+    }, async(jwt_payload, done) => {
         try {
-            let user = await UserModel.findOne({email})
-
-            if(user) return done(null, false)
-
-            let newUser = { 
-                first_name,
-                last_name,
-                email,
-                age,
-                password: createHash(password)
-            }
-
-            let result = await UserModel.create(newUser)
-            return done(null, result)
-
+            return done (null, jwt_payload)
         } catch (error) {
             return done(error)
-
         }
-}))
+}))}
 
 
 passport.use("login", new localStrategy({
@@ -55,16 +38,24 @@ passport.use("login", new localStrategy({
     }
 })) 
 
-passport.serializeUser((user, done) => {
+const cookieExtractor = (req) => {
+    let token = null
+    if (req && req.cookies) {
+        token = req.cookies["cookieToken"]
+    }
+    return token 
+}
+
+/*passport.serializeUser((user, done) => {
     done(null, user_id)
 })
 
-passport.deserializeUser(async, (id, done) => {
+passport.deserializeUser, async (id, done) => {
     let user = await UserModel.findById({_id: id})
     done(null, user)
 
-})
-
 }
+
+}*/
 
 export default initializePassport
